@@ -271,20 +271,23 @@ resource "kubernetes_namespace" "argocd_ns" {
 }
 
 resource "null_resource" "argocd_installation" {
-  /* triggers = {
+  triggers = {
     always_run = "${timestamp()}"
-  } */
+  } 
   provisioner "local-exec" {
-    command = "kustomize build /tmp/argocd/  | kubectl apply -f -"
+    command = "kustomize build /tmp/argocd/  > /tmp/salida-kustomize.yaml ; KUBECONFIG=~/.kube/config-${var.cluster_name}  kubectl apply -f /tmp/salida-kustomize.yaml -n argocd"
   }
+  depends_on = [
+    null_resource.login_eks
+  ]
 }
 
 resource "null_resource" "expose_argocd" {
-  /* triggers = {
+  triggers = {
     always_run = "${timestamp()}"
-  } */
+  }
   provisioner "local-exec" {
-    command = "kubectl patch svc argocd-server -n argocd -p '{\"spec\": {\"type\": \"LoadBalancer\"}}'"
+    command = "KUBECONFIG=~/.kube/config-${var.cluster_name}  kubectl patch svc argocd-server -n argocd -p '{\"spec\": {\"type\": \"LoadBalancer\"}}'"
   }
   depends_on = [
     null_resource.argocd_installation
@@ -300,6 +303,6 @@ resource "null_resource" "login_eks" {
     always_run = "${timestamp()}"
   }
   provisioner "local-exec" {
-    command = "KUBECONFIG=\"~/.kube/config-${var.cluster_name}\" aws eks update-kubeconfig --name ${var.cluster_name}"
+    command = "KUBECONFIG=~/.kube/config-${var.cluster_name} aws eks update-kubeconfig --name ${var.cluster_name}"
   }
 }
