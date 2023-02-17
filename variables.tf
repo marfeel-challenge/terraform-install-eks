@@ -38,8 +38,6 @@ variable "default_node_group_instance_type" {
   description = "The instance type to use for the default node group"
   type        = string
 }
-
-
 variable "clusters" {
   type = map(object({
     cluster_name = string
