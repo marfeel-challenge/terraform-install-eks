@@ -113,6 +113,19 @@ module "eks" {
 
 }
 
+module "alb_controller" {
+  source = "terraform-aws-modules/alb-controller/aws"
+  //version = "2.1.0"
+
+  cluster_name = local.name
+  namespace = "kube-system"
+  additional_labels = {}
+  alb_ingress_controller_config_map = {}
+  rbac = true
+  vpc_id = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+}
+
 ################################################################################
 # EKS ngnix
 ################################################################################
