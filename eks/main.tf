@@ -55,9 +55,9 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   cluster_addons = {
-    coredns = {
+    /* coredns = {
       most_recent = true
-    }
+    } */
     kube-proxy = {
       most_recent = true
     }
@@ -268,6 +268,9 @@ resource "kubernetes_namespace" "argocd_ns" {
   metadata {
     name = var.argocd_namespace
   }
+  depends_on = [
+    null_resource.login_eks
+  ]
 }
 
 resource "null_resource" "argocd_installation" {
@@ -278,7 +281,7 @@ resource "null_resource" "argocd_installation" {
     command = "kustomize build /tmp/argocd/  > /tmp/salida-kustomize.yaml ; KUBECONFIG=~/.kube/config-${var.cluster_name}  kubectl apply -f /tmp/salida-kustomize.yaml -n argocd"
   }
   depends_on = [
-    null_resource.login_eks
+    kubernetes_namespace.argocd_ns,
   ]
 }
 
@@ -305,4 +308,7 @@ resource "null_resource" "login_eks" {
   provisioner "local-exec" {
     command = "KUBECONFIG=~/.kube/config-${var.cluster_name} aws eks update-kubeconfig --name ${var.cluster_name} --region ${var.region}"
   }
+  depends_on = [
+    module.eks
+  ]
 }

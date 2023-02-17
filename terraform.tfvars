@@ -7,8 +7,6 @@ argocd_version = "v2.1.6"
 argocd_namespace = "argocd"
 
 tags = {
-
-  "Name" = "eks-cluster"
   "Owner" = "me"
   "Project" = "eks"
 }
