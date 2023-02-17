@@ -114,8 +114,11 @@ module "eks" {
 }
 
 module "alb_controller" {
-  source = "terraform-aws-modules/alb-controller/aws"
+  //source = "terraform-aws-modules/alb-controller/aws"
+  //source = "terraform-aws-modules/terraform-aws-alb-controller"
   //version = "2.1.0"
+  source  = "terraform-aws-modules/alb/aws"
+  version = "6.4.0"
 
   cluster_name = local.name
   namespace = "kube-system"
