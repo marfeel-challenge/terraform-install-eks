@@ -13,12 +13,6 @@ variable "region" {
   description = "The AWS region"
   type        = string
 }
-#vpc_cidr
-variable "vpc_cidr" {
-  description = "The CIDR block for the VPC"
-  type        = string
-  default     = "10.0.0.0/16"
-}
 #tags
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
@@ -60,11 +54,6 @@ variable "clusters" {
     volume_size = number
   }))
 }
-variable "environments" {
-  type = list(string)
-  default = ["dev", "tst"]
-}
-
 #argocd_version
 variable "argocd_version" {
   description = "The ArgoCD version"

@@ -1,7 +1,6 @@
 cluster_name = "eks-cluster"
 cluster_version = "1.21"
 region = "eu-west-1"
-vpc_cidr = "10.0.0.0/16"
 
 argocd_version = "v2.1.6"
 argocd_namespace = "argocd"
