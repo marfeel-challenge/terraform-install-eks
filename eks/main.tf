@@ -113,7 +113,7 @@ module "eks" {
 
 }
 
-module "alb" {
+/* module "alb" {
   //source = "terraform-aws-modules/alb-controller/aws"
   //source = "terraform-aws-modules/terraform-aws-alb-controller"
   //version = "2.1.0"
@@ -124,36 +124,15 @@ module "alb" {
 
   load_balancer_type = "application"
 
-  vpc_id = module.vpc.vpc_id
-  subnets = module.vpc.public_subnets
-  security_groups = [module.vpc.default_security_group_id]
-    security_group_rules = {
-    ingress_all_http = {
-      type        = "ingress"
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
-      description = "HTTP web traffic"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    ingress_all_icmp = {
-      type        = "ingress"
-      from_port   = -1
-      to_port     = -1
-      protocol    = "icmp"
-      description = "ICMP"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress_all = {
-      type        = "egress"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
+  //vpc_id = module.vpc.vpc_id
+  //subnets = module.vpc.public_subnets
+  //security_groups = [module.vpc.default_security_group_id]
+  subnets = module.eks.vpc_private_subnets
+  security_groups = [module.eks.cluster_security_group_id]
+  //access_logs_enabled = true
 
-}
+} */
+
 
 ################################################################################
 # EKS ngnix
