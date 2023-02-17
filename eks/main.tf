@@ -113,20 +113,46 @@ module "eks" {
 
 }
 
-module "alb_controller" {
+module "alb" {
   //source = "terraform-aws-modules/alb-controller/aws"
   //source = "terraform-aws-modules/terraform-aws-alb-controller"
   //version = "2.1.0"
   source  = "terraform-aws-modules/alb/aws"
   version = "6.4.0"
 
-  cluster_name = local.name
-  namespace = "kube-system"
-  additional_labels = {}
-  alb_ingress_controller_config_map = {}
-  rbac = true
+  name = local.name
+
+  load_balancer_type = "application"
+
   vpc_id = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  subnets = module.vpc.public_subnets
+  security_groups = [module.vpc.default_security_group_id]
+    security_group_rules = {
+    ingress_all_http = {
+      type        = "ingress"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "HTTP web traffic"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress_all_icmp = {
+      type        = "ingress"
+      from_port   = -1
+      to_port     = -1
+      protocol    = "icmp"
+      description = "ICMP"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress_all = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
 }
 
 ################################################################################
